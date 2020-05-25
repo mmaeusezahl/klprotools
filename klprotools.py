@@ -32,11 +32,6 @@ def datetime_to_julian_seconds(date):
     return int(_fixed_point_julian_seconds + 
                                  (date - _fixed_point_datetime).total_seconds())
 
-
-def print_hex(b):
-    for a in b:
-        print(a.hex())
-
 def read_file(path, yield_illegal_dates = False):
     """Reads a history file which was created by the 'KlimaLogg Pro' software.
     This function can recognize simple errors which might occur if the battery
@@ -55,7 +50,7 @@ def read_file(path, yield_illegal_dates = False):
         hum) correspond to the temperature (temp in °C) and humidity (in %)
         of each of the 9 channels in the order internal, ch. 1, ch. 2, ...
         Temperature and humidity might be None if the respective sensor was not
-        connected.
+        connected. The date might be None if `yield_illegal_dates` is True.
     :rtype: (datetime, [(float, float), ...])
     """
     # the data comes in chunks of 84 bytes
@@ -107,6 +102,23 @@ _NONE_HUM  = 0x0000dc42 # ~110.0%
 _NONE_DATE = 0x0000000000000000
 
 def write_file(path, all_entries):
+    """This function can write history files that can be read by the 
+    'KlimaLogg Pro' software. It is the counterpart to 
+    :meth:`klprotools.read_file` and can work in conjunction to fix files.
+
+    :param path: path to the history file to create
+    :type path: str
+    :param all_entries: Tuples (date, data) where date is a datetime and data is 
+        a list of 9 tuples which are each composed of two floats. These tuples 
+        (temp, hum) correspond to the temperature (temp in °C) and humidity 
+        (in %) of each of the 9 channels in the order internal, ch. 1, ch. 2, 
+        ... Temperature and humidity might be None if the respective sensor was 
+        not connected. The date might be None but this will create illegal files
+        that can't be read by the 'KlimaLogg Pro' software
+    :type all_entries: Iterable [(datetime, [(float, float), ...]),...]
+    :raises ValueError: A ValueError might occur if an incorrect number of 
+        channels is supploes
+    """
     with open(path, "wb") as f:
         for date, data in all_entries:
             if date is None:

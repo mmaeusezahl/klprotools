@@ -34,13 +34,33 @@ class TestDates(unittest.TestCase):
 
 
 class TestReading(unittest.TestCase):
-    def test_read_file(self):
-        path = pathlib.Path(__file__).parent.absolute()\
+    def setUp(self):
+        self.mock_data_path = pathlib.Path(__file__).parent.absolute()\
                                      .joinpath('data')\
                                      .joinpath('0_history.dat')
 
-        result = klp.read_file(path)
-        list(result)
+    def test_read_file(self):
+
+        # Check if the incorrect entries are skipped correctly
+        result = list(klp.read_file(self.mock_data_path))
+        self.assertEqual(len(result), 2)
+        
+        # Check if the incorrect entries are captured correctly if required
+        result = list(klp.read_file(self.mock_data_path, True))
+        self.assertEqual(len(result), 3)
+
+    def test_read_and_write(self):
+        with tempfile.TemporaryDirectory() as td:
+            altered_file = os.path.join(td, '0_history.dat')
+
+            # Directly write the file again without listing
+            data_in = klp.read_file(self.mock_data_path, False)
+            klp.write_file(altered_file, data_in)
+
+            # Check that the file does no longer contain the incorrect entry
+            result = list(klp.read_file(altered_file, True))
+            self.assertEqual(len(result), 2)
+
     
 class TestWriting(unittest.TestCase):
     def setUp(self):
