@@ -20,5 +20,6 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    scripts=["fix_klpro_history.py"],
+    python_requires=">=3.6",
 )

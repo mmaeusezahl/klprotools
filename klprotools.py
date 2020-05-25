@@ -2,7 +2,7 @@ import struct
 import datetime
 
 # This fixpoint was extracted by reverse engineering
-_fixed_point_datetime = datetime.datetime(2019, 9 ,13, 14, 0, 0)
+_fixed_point_datetime = datetime.datetime(2019, 9,13,14, 0, 0)
 _fixed_point_julian_seconds = 212435186400
 
 def julian_seconds_to_datetime(julian_seconds):
