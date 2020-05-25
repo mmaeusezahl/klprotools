@@ -14,6 +14,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/mmaeusezahl/klprotools",
     packages=setuptools.find_packages(),
+    py_modules=['klprotools.py'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
